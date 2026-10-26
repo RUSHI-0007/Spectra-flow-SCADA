@@ -62,73 +62,73 @@ export const TopStatusBar: React.FC = () => {
     switch (state.machineState) {
       case 'RUNNING':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-emerald-950/80 border border-emerald-500/80 text-emerald-300 font-mono text-xs font-bold tracking-wider led-glow-green">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            RUNNING
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Running
           </div>
         );
       case 'STARTING':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-cyan-950/80 border border-cyan-500/80 text-cyan-300 font-mono text-xs font-bold tracking-wider">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-            RAMPING UP (STARTING)
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950/70 border border-amber-500/50 text-amber-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            Starting up
           </div>
         );
       case 'STOPPING':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-amber-950/80 border border-amber-500/80 text-amber-300 font-mono text-xs font-bold tracking-wider">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-            DECELERATING (STOPPING)
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950/70 border border-amber-500/50 text-amber-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+            Stopping
           </div>
         );
       case 'FAULT':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-red-950/90 border border-red-500 text-red-200 font-mono text-xs font-bold tracking-wider alarm-flash led-glow-red">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-            PROTECTIVE FAULT
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-950/80 border border-red-500 text-red-200 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            Fault trip
           </div>
         );
       case 'EMERGENCY_STOP':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-rose-950 border-2 border-rose-500 text-rose-100 font-mono text-xs font-black tracking-wider alarm-flash led-glow-red">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-            EMERGENCY STOPPED
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-950 border border-red-500 text-red-100 text-xs font-bold">
+            <span className="w-2 h-2 rounded-full bg-red-400"></span>
+            Emergency stop
           </div>
         );
       case 'IDLE':
       default:
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-xs font-bold">
-            <span className="w-2 h-2 rounded-full bg-slate-500"></span>
-            STANDBY (IDLE)
+          <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-800/80 border border-slate-700/60 text-slate-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+            Idle
           </div>
         );
     }
   };
 
   return (
-    <header className="bg-slate-900 border-b border-slate-800 px-4 py-2 select-none shadow-md">
+    <header className="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 select-none shadow-sm backdrop-blur-xs">
       <div className="flex items-center justify-between gap-3">
         {/* Left: Brand & Machine Status Pill */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-500 to-blue-700 flex items-center justify-center shadow-md border border-cyan-400/50">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
               <Cpu className="w-4 h-4 text-white" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-black tracking-widest text-white uppercase font-mono">
-                  SPECTRA-FLOW SCADA
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold tracking-tight text-white">
+                  Conveyor SCADA
                 </span>
-                <span className="text-[9px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-1 py-0.2 rounded font-mono font-bold">
-                  HMI v5.2
+                <span className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-medium">
+                  Line 4
                 </span>
-                <span className="text-[9px] bg-amber-950/80 text-amber-300 border border-amber-700/80 px-1.5 py-0.2 rounded font-mono font-bold">
-                  SIMULATED
+                <span className="text-[10px] bg-blue-950 text-blue-300 border border-blue-800/50 px-1.5 py-0.5 rounded font-medium">
+                  Simulated
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-mono">
-                Line #4 Bottling & Packaging Control Suite
+              <p className="text-xs text-slate-400">
+                Automated bottle sorting and monitoring
               </p>
             </div>
           </div>

@@ -1,11 +1,7 @@
-// ============================================================================
-// PLC-Style Status Strip
-// Hardware indicator lamps: MOTOR_RUN, SENSOR_1, DIVERTER, ESTOP, FAULT
-// ============================================================================
-
 import React from 'react';
 import { StatusLamp } from '../common/StatusLamp';
 import { useScada } from '../../context/ScadaContext';
+import { HelpTooltip } from '../common/HelpTooltip';
 
 export const PlcStatusStrip: React.FC = () => {
   const { state } = useScada();
@@ -17,40 +13,44 @@ export const PlcStatusStrip: React.FC = () => {
   const isFaultActive = state.machineState === 'FAULT' || Object.values(state.activeFaults).some(Boolean);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 shadow-md">
-      <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-        <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
-        <span>PLC I/O Bus Status:</span>
+    <div className="bg-slate-900/90 border border-slate-800/80 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-md">
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
+        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+        <span>PLC Input / Output Bus Status</span>
+        <HelpTooltip 
+          term="PLC Bus Signals" 
+          explanation="Real-time discrete I/O channels mapped to conveyor motor relays, photo sensors, and pneumatic solenoids." 
+        />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2.5">
         <StatusLamp
-          label="MOTOR_RUN"
+          label="Motor Drive"
           tag="%QX0.0"
           active={isMotorRunning}
           color="green"
         />
         <StatusLamp
-          label="SENSOR_1"
+          label="Optical Sensor"
           tag="%IX0.1"
           active={isSensorActive}
           color="blue"
         />
         <StatusLamp
-          label="DIVERTER"
+          label="Diverter Arm"
           tag="%QX0.1"
           active={isDiverterActive}
           color="amber"
         />
         <StatusLamp
-          label="ESTOP"
+          label="Emergency Stop"
           tag="%IX0.0"
           active={isEstopActive}
           color="red"
           flashing={isEstopActive}
         />
         <StatusLamp
-          label="FAULT"
+          label="Fault Interlock"
           tag="%MX1.0"
           active={isFaultActive}
           color="red"

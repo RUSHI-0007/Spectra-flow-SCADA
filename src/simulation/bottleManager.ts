@@ -113,11 +113,15 @@ export class BottleManager {
         bottle.isJammed = false;
       }
 
-      // Check Sensor Detection Zone (x = 350, window 330 to 370)
-      const inSensorBeam = newPos >= (sensor.position - 22) && newPos <= (sensor.position + 22);
+      // Check Sensor Detection Zone (x = 350, window 325 to 375)
+      const inSensorBeam = newPos >= (sensor.position - 25) && newPos <= (sensor.position + 25);
       if (inSensorBeam) {
         sensorActive = true;
         sensorTriggeredBottle = bottle;
+
+        if (!bottle.detected) {
+          bottle.detected = true;
+        }
 
         // If sensor is malfunctioning, bottle may be flagged as UNVERIFIED
         if (sensor.malfunctioning && bottle.defect === 'NONE') {
@@ -125,9 +129,8 @@ export class BottleManager {
         }
       }
 
-      // Check Diverter Sorting Zone (x = 650, window 630 to 670)
-      const inDiverterZone = newPos >= 630 && newPos <= 670;
-      if (inDiverterZone && !bottle.diverted) {
+      // Check Diverter Sorting Zone (x >= 640)
+      if (newPos >= 640 && !bottle.diverted && !bottle.sorted) {
         if (opMode === 'AUTO') {
           // Rule: Category B is diverted to Bin B; Category A proceeds straight to Bin A
           if (bottle.category === 'CATEGORY_B') {
@@ -136,8 +139,7 @@ export class BottleManager {
             bottle.sorted = true;
             bottle.sortedTo = 'BIN_B';
             onBottleSorted('BIN_B', bottle);
-            nextBottles.push(bottle);
-            continue;
+            continue; // Sorted off belt
           }
         } else {
           // Manual mode: if diverter is actively actuated by operator, push bottle!
@@ -146,8 +148,7 @@ export class BottleManager {
             bottle.sorted = true;
             bottle.sortedTo = 'BIN_B';
             onBottleSorted('BIN_B', bottle);
-            nextBottles.push(bottle);
-            continue;
+            continue; // Sorted off belt
           }
         }
       }
@@ -157,8 +158,7 @@ export class BottleManager {
         bottle.sorted = true;
         bottle.sortedTo = 'BIN_A';
         onBottleSorted('BIN_A', bottle);
-        nextBottles.push(bottle);
-        continue;
+        continue; // Sorted off belt
       }
 
       nextBottles.push({

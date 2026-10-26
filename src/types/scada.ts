@@ -35,6 +35,8 @@ export interface Bottle {
   hasCap: boolean;
   sorted: boolean;
   sortedTo?: 'BIN_A' | 'BIN_B' | 'REJECT';
+  sortedAt?: number;
+  detected?: boolean;
   diverted: boolean;
   isJammed?: boolean;
   createdAt: number;

@@ -66,6 +66,25 @@ export const DEFAULT_SETTINGS: SimSettings = {
   shiftName: 'Shift A (Morning 06:00 - 14:00)',
 };
 
+function generateBaselineTelemetry(): ProductionRecord[] {
+  const records: ProductionRecord[] = [];
+  const now = Date.now();
+  for (let i = 25; i >= 1; i--) {
+    const t = now - i * 2000;
+    records.push({
+      timestamp: t,
+      timeStr: new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      bpm: 0,
+      totalBottles: 0,
+      catA: 0,
+      catB: 0,
+      speedMs: 0,
+      motorTempC: 38.0 + (Math.sin(i / 3) * 0.5),
+    });
+  }
+  return records;
+}
+
 const INITIAL_STATE: ScadaState = {
   machineState: 'IDLE',
   operationMode: 'AUTO',
@@ -83,9 +102,9 @@ const INITIAL_STATE: ScadaState = {
     targetSpeedMs: 1.0,
     frequencyHz: 0,
     rpm: 0,
-    temperatureC: 38.0,
-    loadPercent: 0,
-    currentAmps: 0,
+    currentAmps: 0.5,
+    temperatureC: 38.5,
+    loadPercent: 5,
     coolingFanRunning: false,
   },
   sensor: {
@@ -130,7 +149,7 @@ const INITIAL_STATE: ScadaState = {
       operator: 'SYSTEM',
     },
   ],
-  productionHistory: [],
+  productionHistory: generateBaselineTelemetry(),
   settings: DEFAULT_SETTINGS,
   currentPage: 'simulation',
   guidedTourActive: false,
@@ -165,6 +184,7 @@ type Action =
   | { type: 'RESET_DEMO' }
   | { type: 'SET_GUIDED_TOUR'; active: boolean; step?: number }
   | { type: 'SET_AUTOPILOT'; active: boolean; status?: string }
+  | { type: 'RECORD_TELEMETRY'; record: ProductionRecord }
   | { type: 'SIMULATION_TICK'; deltaSec: number };
 
 function loadSavedState(): Partial<ScadaState> {
@@ -270,6 +290,15 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         },
         events: [
           {
+            id: `evt-${Date.now()}-sc`,
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleTimeString(),
+            type: 'STATE_CHANGE',
+            description: `State Machine: Transitioned from ${state.machineState} to ${result.nextState} (Acceleration ramp initiated)`,
+            source: 'STATE_ENGINE',
+            operator: state.settings.operatorName,
+          },
+          {
             id: `evt-${Date.now()}`,
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString(),
@@ -278,7 +307,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
             source: 'HMI_START_PB',
             operator: state.settings.operatorName,
           },
-          ...state.events.slice(0, 999),
+          ...state.events.slice(0, 998),
         ],
       };
     }
@@ -306,6 +335,15 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         },
         events: [
           {
+            id: `evt-${Date.now()}-sc`,
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleTimeString(),
+            type: 'STATE_CHANGE',
+            description: `State Machine: Transitioned from ${state.machineState} to ${result.nextState} (Deceleration ramp initiated)`,
+            source: 'STATE_ENGINE',
+            operator: state.settings.operatorName,
+          },
+          {
             id: `evt-${Date.now()}`,
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString(),
@@ -314,7 +352,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
             source: 'HMI_STOP_PB',
             operator: state.settings.operatorName,
           },
-          ...state.events.slice(0, 999),
+          ...state.events.slice(0, 998),
         ],
       };
     }
@@ -336,6 +374,15 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         },
         events: [
           {
+            id: `evt-${Date.now()}-sc`,
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleTimeString(),
+            type: 'STATE_CHANGE',
+            description: `State Machine: Transitioned from ${state.machineState} to EMERGENCY_STOP (Immediate hard trip)`,
+            source: 'STATE_ENGINE',
+            operator: state.settings.operatorName,
+          },
+          {
             id: `evt-${Date.now()}`,
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString(),
@@ -344,7 +391,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
             source: 'SAFETY_LOOP',
             operator: state.settings.operatorName,
           },
-          ...state.events.slice(0, 999),
+          ...state.events.slice(0, 998),
         ],
       };
     }
@@ -377,6 +424,15 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         },
         events: [
           {
+            id: `evt-${Date.now()}-sc`,
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleTimeString(),
+            type: 'STATE_CHANGE',
+            description: `State Machine: Transitioned from ${state.machineState} to ${result.nextState} (Safety relay reset)`,
+            source: 'STATE_ENGINE',
+            operator: state.settings.operatorName,
+          },
+          {
             id: `evt-${Date.now()}`,
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString(),
@@ -385,7 +441,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
             source: 'SAFETY_RELAY',
             operator: state.settings.operatorName,
           },
-          ...state.events.slice(0, 999),
+          ...state.events.slice(0, 998),
         ],
       };
     }
@@ -414,6 +470,15 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         },
         events: [
           {
+            id: `evt-${Date.now()}-sc`,
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleTimeString(),
+            type: 'STATE_CHANGE',
+            description: `State Machine: Transitioned from ${state.machineState} to ${result.nextState} (Interlocks cleared)`,
+            source: 'STATE_ENGINE',
+            operator: state.settings.operatorName,
+          },
+          {
             id: `evt-${Date.now()}`,
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString(),
@@ -422,7 +487,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
             source: 'HMI_RESET_PB',
             operator: state.settings.operatorName,
           },
-          ...state.events.slice(0, 999),
+          ...state.events.slice(0, 998),
         ],
       };
     }
@@ -740,6 +805,65 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         downtimeSeconds: state.counters.downtimeSeconds + (nextMachineState !== 'RUNNING' ? dt : 0),
       };
 
+      // Events collection for automatic simulation occurrences
+      const tickEvents: ScadaEvent[] = [];
+      const nowTs = Date.now();
+      const nowStr = new Date().toLocaleTimeString();
+
+      // State transition event during automatic ramp or auto fault trip
+      if (nextMachineState !== state.machineState) {
+        tickEvents.push({
+          id: `evt-${nowTs}-stchg`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'STATE_CHANGE',
+          description: `State Machine: Transitioned from ${state.machineState} to ${nextMachineState}`,
+          source: 'STATE_ENGINE',
+          operator: 'AUTO_PLC',
+        });
+      }
+
+      // Sorting events
+      if (catAIncrement > 0) {
+        tickEvents.push({
+          id: `evt-${nowTs}-sorta`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'SORTING',
+          description: `Bottle sorted into Bin A (Category A, 500ml Clear) - count: ${nextCounters.categoryA}`,
+          source: 'BIN_A_LINE',
+          operator: 'AUTO_PLC',
+        });
+      }
+      if (catBIncrement > 0) {
+        tickEvents.push({
+          id: `evt-${nowTs}-sortb`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'SORTING',
+          description: `Bottle diverted into Bin B (Category B, 1000ml Amber) - count: ${nextCounters.categoryB}`,
+          source: 'DIVERTER_SOL_01',
+          operator: 'AUTO_PLC',
+        });
+      }
+
+      // Detection event (throttled: only on new rising edge beam break)
+      if (sensorActive && !state.sensor.active) {
+        tickEvents.push({
+          id: `evt-${nowTs}-det`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'SYSTEM',
+          description: `Photoelectric Sensor S-01: Detected bottle beam-break (Detection #${nextSensor.detectionCount})`,
+          source: 'SENSOR_S01',
+          operator: 'SIM_HOST',
+        });
+      }
+
+      const nextEvents = tickEvents.length > 0 
+        ? [...tickEvents, ...state.events].slice(0, 1000)
+        : state.events;
+
       return {
         ...state,
         machineState: nextMachineState,
@@ -750,8 +874,19 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         bottles: updatedBottles,
         alarms: nextAlarms,
         counters: nextCounters,
+        events: nextEvents,
       };
     }
+
+    case 'RECORD_TELEMETRY':
+      return {
+        ...state,
+        counters: {
+          ...state.counters,
+          currentBpm: action.record.bpm,
+        },
+        productionHistory: [...state.productionHistory, action.record].slice(-300),
+      };
 
     default:
       return state;
@@ -843,8 +978,7 @@ export const ScadaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           motorTempC: stateRef.current.motor.temperatureC,
         };
 
-        const updatedHistory = [...stateRef.current.productionHistory, record].slice(-300);
-        stateRef.current.productionHistory = updatedHistory;
+        dispatch({ type: 'RECORD_TELEMETRY', record });
       }
     }, 50);
 

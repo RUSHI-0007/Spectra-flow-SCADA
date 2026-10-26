@@ -110,9 +110,9 @@ const ScadaAppContent: React.FC = () => {
         {/* Sidebar Navigation (collapsible in Kiosk mode) */}
         {!isKioskMode && <Sidebar />}
 
-        {/* Scrollable Page Content Area */}
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-50px)]">
-          <div className="max-w-7xl mx-auto pb-16">
+        {/* Scrollable Page Content Area - Full Width */}
+        <main className="flex-1 p-3 md:p-5 overflow-y-auto max-h-[calc(100vh-50px)]">
+          <div className="w-full pb-28">
             {renderCurrentPage()}
           </div>
         </main>
