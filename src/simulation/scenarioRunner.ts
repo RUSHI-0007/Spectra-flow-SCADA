@@ -169,7 +169,7 @@ export const PRESENTER_TALKING_POINTS: Record<string, PageTalkingPoints> = {
     points: [
       'Complies with ANSI/ISA-18.2 and IEC 62682 industrial alarm lifecycle standards.',
       'Four distinct states: Active Unacknowledged, Active Acknowledged, Cleared Unacknowledged, Cleared.',
-      'Priorities: Critical (flashing red, auto-trip), Warning (amber), Info (blue).',
+      'Priorities: Critical (flashing red, auto-trip), Warning (amber), Info (neutral).',
       'Audible industrial horn synthesized using browser Web Audio API.',
     ],
     vivaQuestions: [

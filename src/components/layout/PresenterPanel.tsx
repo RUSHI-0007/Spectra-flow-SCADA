@@ -1,6 +1,7 @@
 // ============================================================================
-// Collapsible Presenter Panel for Exhibition & Live Viva
-// Features examiner talking points and 1-click test scenarios
+// Collapsible Presenter Panel for Viva & Exhibition
+// Responsive: Bottom sheet on phone (<md), side slide-out drawer on md+
+// Accent: graphite #3B4651
 // ============================================================================
 
 import React, { useState } from 'react';
@@ -14,7 +15,8 @@ import {
   Radio, 
   ShieldAlert, 
   CheckCircle2, 
-  BookOpen 
+  BookOpen,
+  X
 } from 'lucide-react';
 import { useScada } from '../../context/ScadaContext';
 import { PRESENTER_TALKING_POINTS } from '../../simulation/scenarioRunner';
@@ -56,121 +58,206 @@ export const PresenterPanel: React.FC = () => {
   };
 
   return (
-    <div className={`fixed right-0 top-16 bottom-0 z-40 flex transition-all duration-300 ${
-      isOpen ? 'translate-x-0' : 'translate-x-[360px]'
-    }`}>
-      {/* Tab toggle button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="self-center -ml-10 bg-slate-800 hover:bg-slate-700 text-cyan-400 border-l border-y border-slate-700 p-2.5 rounded-l-lg shadow-xl cursor-pointer flex items-center justify-center transition-colors"
-        title="Toggle Presenter Notes & Scenarios"
-      >
-        {isOpen ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-      </button>
+    <>
+      {/* Desktop / Tablet Slideout Drawer (md+) */}
+      <div className={`hidden md:flex fixed right-0 top-14 bottom-0 z-40 transition-all duration-300 ${
+        isOpen ? 'translate-x-0' : 'translate-x-[360px]'
+      }`}>
+        {/* Tab toggle button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="self-center -ml-10 bg-white hover:bg-[#F5F6F8] text-[#3B4651] border-l border-y border-[#CBD2D9] p-2.5 rounded-l-lg shadow-xs cursor-pointer flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
+          title="Toggle Presenter Notes & Scenarios"
+        >
+          {isOpen ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+        </button>
 
-      {/* Main Panel Content */}
-      <div className="w-[360px] bg-slate-900 border-l border-slate-800 p-4 shadow-2xl flex flex-col justify-between overflow-y-auto">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-            <BookOpen className="w-4 h-4 text-blue-400" />
-            <h3 className="text-xs font-semibold text-white">
-              Presenter notes and viva prep
-            </h3>
-          </div>
-
-          {/* Current Page Talking Points */}
-          <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 space-y-2">
-            <div className="text-xs font-semibold text-blue-300">
-              {pointsData.title} talking points
+        {/* Main Panel Content */}
+        <div className="w-[360px] bg-white border-l border-[#CBD2D9] p-4 shadow-lg flex flex-col justify-between overflow-y-auto">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-[#D5DBE1]">
+              <BookOpen className="w-4 h-4 text-[#3B4651]" />
+              <h3 className="text-xs font-bold text-[#1F2933]">
+                Presenter Notes &amp; Viva Prep
+              </h3>
             </div>
-            <ul className="space-y-1.5 text-slate-300 text-xs leading-relaxed">
-              {pointsData.points.map((pt, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-blue-400 font-bold">•</span>
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
 
-          {/* Viva Q&A Snippet */}
-          {pointsData.vivaQuestions.length > 0 && (
-            <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 space-y-2">
-              <div className="text-xs font-medium text-amber-400 flex items-center gap-1">
-                <HelpCircle className="w-3.5 h-3.5" />
-                <span>Likely examiner question:</span>
+            {/* Current Page Talking Points */}
+            <div className="bg-[#F5F6F8] p-3 rounded-lg border border-[#D5DBE1] space-y-2">
+              <div className="text-xs font-bold text-[#3B4651]">
+                {pointsData.title} Talking Points
               </div>
-              <p className="text-xs text-slate-200 font-medium italic">
-                "{pointsData.vivaQuestions[0].q}"
-              </p>
-              <div className="text-xs text-slate-300 leading-relaxed bg-slate-900 p-2.5 rounded border border-slate-800">
-                <strong className="text-emerald-400 font-medium">Answer:</strong> {pointsData.vivaQuestions[0].a}
+              <ul className="space-y-1.5 text-[#52606D] text-xs leading-relaxed">
+                {pointsData.points.map((pt, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-[#3B4651] font-bold">•</span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Viva Q&A Snippet */}
+            {pointsData.vivaQuestions.length > 0 && (
+              <div className="bg-[#F5F6F8] p-3 rounded-lg border border-[#D5DBE1] space-y-2">
+                <div className="text-xs font-semibold text-[#D98200] flex items-center gap-1">
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  <span>Likely Examiner Question:</span>
+                </div>
+                <p className="text-xs text-[#1F2933] font-medium italic">
+                  "{pointsData.vivaQuestions[0].q}"
+                </p>
+                <div className="text-xs text-[#52606D] leading-relaxed bg-white p-2.5 rounded border border-[#D5DBE1]">
+                  <strong className="text-[#2E7D32] font-semibold">Answer:</strong> {pointsData.vivaQuestions[0].a}
+                </div>
+              </div>
+            )}
+
+            {/* 1-Click Demonstration Scenarios */}
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-[#52606D]">
+                One-Click Demo Scenarios
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs font-medium">
+                <button
+                  onClick={handleScenarioNormal}
+                  className="p-2.5 rounded-lg bg-[#E8F5E9] hover:bg-[#C8E6C9] text-[#2E7D32] border border-[#A5D6A7] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <Play className="w-3.5 h-3.5 text-[#2E7D32]" />
+                  <span>Normal Run</span>
+                </button>
+
+                <button
+                  onClick={handleScenarioJam}
+                  className="p-2.5 rounded-lg bg-[#FFF8E1] hover:bg-[#FFECB3] text-[#D98200] border border-[#FFE082] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#D98200]" />
+                  <span>Conveyor Jam</span>
+                </button>
+
+                <button
+                  onClick={handleScenarioOverload}
+                  className="p-2.5 rounded-lg bg-[#FFF8E1] hover:bg-[#FFECB3] text-[#D98200] border border-[#FFE082] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <Flame className="w-3.5 h-3.5 text-[#D98200]" />
+                  <span>Motor Overload</span>
+                </button>
+
+                <button
+                  onClick={handleScenarioSensorFault}
+                  className="p-2.5 rounded-lg bg-[#F5F6F8] hover:bg-[#ECEFF2] text-[#52606D] border border-[#D5DBE1] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <Radio className="w-3.5 h-3.5 text-[#52606D]" />
+                  <span>Sensor Fault</span>
+                </button>
+
+                <button
+                  onClick={handleScenarioEstop}
+                  className="p-2.5 rounded-lg bg-[#FFEBEE] hover:bg-[#FFCDD2] text-[#C62828] border border-[#EF9A9A] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <ShieldAlert className="w-3.5 h-3.5 text-[#C62828]" />
+                  <span>Emergency Stop</span>
+                </button>
+
+                <button
+                  onClick={handleScenarioRecovery}
+                  className="p-2.5 rounded-lg bg-white hover:bg-[#ECEFF2] text-[#3B4651] border border-[#3B4651] flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#3B4651]" />
+                  <span>Full Recovery</span>
+                </button>
               </div>
             </div>
-          )}
-
-          {/* 1-Click Demonstration Scenarios */}
-          <div className="space-y-2">
-            <div className="text-xs font-semibold text-slate-400">
-              One-click demo scenarios
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-              <button
-                onClick={handleScenarioNormal}
-                className="p-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Play className="w-3 h-3 text-emerald-400" />
-                Normal production
-              </button>
-
-              <button
-                onClick={handleScenarioJam}
-                className="p-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <AlertTriangle className="w-3 h-3 text-amber-400" />
-                Conveyor jam
-              </button>
-
-              <button
-                onClick={handleScenarioOverload}
-                className="p-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-rose-300 border border-rose-500/30 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Flame className="w-3 h-3 text-rose-400" />
-                Motor overload
-              </button>
-
-              <button
-                onClick={handleScenarioSensorFault}
-                className="p-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-purple-300 border border-purple-500/30 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Radio className="w-3 h-3 text-purple-400" />
-                Sensor failure
-              </button>
-
-              <button
-                onClick={handleScenarioEstop}
-                className="p-2.5 rounded-lg bg-red-950/70 hover:bg-red-900/90 text-red-200 border border-red-500/50 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <ShieldAlert className="w-3 h-3 text-red-400" />
-                Emergency stop
-              </button>
-
-              <button
-                onClick={handleScenarioRecovery}
-                className="p-2.5 rounded-lg bg-blue-950/70 hover:bg-blue-900/90 text-blue-200 border border-blue-500/50 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <CheckCircle2 className="w-3 h-3 text-blue-400" />
-                Full recovery
-              </button>
-            </div>
           </div>
-        </div>
 
-        <div className="pt-3 border-t border-slate-800 text-[11px] text-slate-500 text-center">
-          SCADA Conveyor Simulator • Presenter companion
+          <div className="pt-3 border-t border-[#D5DBE1] text-[11px] text-[#52606D] text-center">
+            SCADA Conveyor Simulator • Presenter Notes
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile Floating Presenter Notes Trigger & Bottom Sheet (<md) */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed right-3 bottom-16 z-30 p-2.5 bg-[#3B4651] text-white rounded-full shadow-md flex items-center justify-center min-w-[44px] min-h-[44px]"
+          title="Presenter Viva Notes"
+        >
+          <BookOpen className="w-5 h-5" />
+        </button>
+
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/40">
+            <div 
+              className="fixed inset-0"
+              onClick={() => setIsOpen(false)}
+            />
+            <div className="relative bg-white rounded-t-xl border-t border-[#CBD2D9] shadow-lg p-4 space-y-4 z-10 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] max-h-[85vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-2 border-b border-[#D5DBE1]">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-[#3B4651]" />
+                  <span className="text-sm font-bold text-[#1F2933]">Presenter Notes &amp; Scenarios</span>
+                </div>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 rounded text-[#52606D] hover:text-[#1F2933] min-w-[44px] min-h-[44px] flex items-center justify-center"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Talking points */}
+              <div className="bg-[#F5F6F8] p-3 rounded-lg border border-[#D5DBE1] space-y-1.5">
+                <span className="text-xs font-bold text-[#3B4651] block">{pointsData.title} Talking Points</span>
+                <ul className="space-y-1 text-xs text-[#52606D]">
+                  {pointsData.points.map((pt, idx) => (
+                    <li key={idx} className="flex items-start gap-1.5">
+                      <span className="text-[#3B4651] font-bold">•</span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Scenarios */}
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-[#52606D] block">1-Click Test Scenarios</span>
+                <div className="grid grid-cols-2 gap-2 text-xs font-medium">
+                  <button
+                    onClick={() => { handleScenarioNormal(); setIsOpen(false); }}
+                    className="p-2.5 rounded-lg bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7] flex items-center gap-1.5 min-h-[44px]"
+                  >
+                    <Play className="w-3.5 h-3.5 text-[#2E7D32]" />
+                    <span>Normal Run</span>
+                  </button>
+                  <button
+                    onClick={() => { handleScenarioJam(); setIsOpen(false); }}
+                    className="p-2.5 rounded-lg bg-[#FFF8E1] text-[#D98200] border border-[#FFE082] flex items-center gap-1.5 min-h-[44px]"
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5 text-[#D98200]" />
+                    <span>Conveyor Jam</span>
+                  </button>
+                  <button
+                    onClick={() => { handleScenarioEstop(); setIsOpen(false); }}
+                    className="p-2.5 rounded-lg bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] flex items-center gap-1.5 min-h-[44px]"
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5 text-[#C62828]" />
+                    <span>Emergency Stop</span>
+                  </button>
+                  <button
+                    onClick={() => { handleScenarioRecovery(); setIsOpen(false); }}
+                    className="p-2.5 rounded-lg bg-white text-[#3B4651] border border-[#3B4651] flex items-center gap-1.5 min-h-[44px]"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#3B4651]" />
+                    <span>Full Recovery</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };

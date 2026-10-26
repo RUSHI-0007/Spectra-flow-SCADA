@@ -1,107 +1,216 @@
 @import "tailwindcss";
 
+@theme {
+  --color-hmi-bg: #EEF0F2;
+  --color-hmi-sidebar: #E2E6EA;
+  --color-hmi-sidebar-selected: #3B4651;
+  --color-hmi-sidebar-selected-text: #FFFFFF;
+  --color-hmi-topbar: #FFFFFF;
+  --color-hmi-topbar-border: #CBD2D9;
+  
+  --color-hmi-card: #FFFFFF;
+  --color-hmi-card-border: #D5DBE1;
+  --color-hmi-card-subtle: #F5F6F8;
+  --color-hmi-card-hover: #ECEFF2;
+  
+  --color-hmi-text: #1F2933;
+  --color-hmi-text-sec: #52606D;
+  --color-hmi-text-muted: #52606D;
+  --color-hmi-disabled: #9AA5B1;
+  
+  --color-hmi-accent: #3B4651;
+  --color-hmi-accent-hover: #2D363F;
+  --color-hmi-accent-light: #ECEFF2;
+  
+  --color-hmi-running: #2E7D32;
+  --color-hmi-running-bg: #E8F5E9;
+  --color-hmi-running-border: #A5D6A7;
+  
+  --color-hmi-warning: #D98200;
+  --color-hmi-warning-bg: #FFF8E1;
+  --color-hmi-warning-border: #FFE082;
+  
+  --color-hmi-fault: #C62828;
+  --color-hmi-fault-bg: #FFEBEE;
+  --color-hmi-fault-border: #EF9A9A;
+  
+  --color-hmi-idle: #6B7785;
+  --color-hmi-idle-bg: #F0F2F5;
+  --color-hmi-idle-border: #CBD2D9;
+  
+  --color-hmi-bina: #6B7A5A;
+  --color-hmi-bina-bg: #F2F5F0;
+  --color-hmi-bina-border: #CCD5C5;
+  
+  --color-hmi-binb: #B7791F;
+  --color-hmi-binb-bg: #FDF6E9;
+  --color-hmi-binb-border: #E8D4B4;
+  
+  --color-hmi-conveyor: #9AA5B1;
+  --color-hmi-roller: #6B7785;
+  --color-hmi-frame: #CBD2D9;
+  
+  --color-hmi-grid: #E4E7EB;
+}
+
 @layer base {
   :root {
-    --scada-bg: #0b0f19;
-    --scada-panel: #111827;
-    --scada-border: #1f293d;
-    --scada-bg: #0b0f19;
-    --scada-panel: #111827;
-    --scada-border: #1e293b;
-    --scada-accent: #2563eb;
-    --scada-green: #10b981;
-    --scada-yellow: #f59e0b;
-    --scada-red: #ef4444;
+    --hmi-bg: #EEF0F2;
+    --hmi-sidebar: #E2E6EA;
+    --hmi-sidebar-selected: #3B4651;
+    --hmi-topbar: #FFFFFF;
+    --hmi-topbar-border: #CBD2D9;
+    --hmi-card: #FFFFFF;
+    --hmi-card-border: #D5DBE1;
+    --hmi-card-subtle: #F5F6F8;
+    
+    --hmi-text-primary: #1F2933;
+    --hmi-text-secondary: #52606D;
+    --hmi-text-muted: #52606D;
+    --hmi-disabled: #9AA5B1;
+    
+    --hmi-accent: #3B4651;
+    --hmi-accent-hover: #2D363F;
+    --hmi-accent-light: #ECEFF2;
+    
+    --hmi-running: #2E7D32;
+    --hmi-running-bg: #E8F5E9;
+    --hmi-warning: #D98200;
+    --hmi-warning-bg: #FFF8E1;
+    --hmi-fault: #C62828;
+    --hmi-fault-bg: #FFEBEE;
+    --hmi-idle: #6B7785;
+    --hmi-idle-bg: #F0F2F5;
+    
+    --hmi-bin-a: #6B7A5A;
+    --hmi-bin-a-bg: #F2F5F0;
+    --hmi-bin-b: #B7791F;
+    --hmi-bin-b-bg: #FDF6E9;
+    
+    --hmi-conveyor-belt: #9AA5B1;
+    --hmi-conveyor-roller: #6B7785;
+    --hmi-chart-grid: #E4E7EB;
   }
 
   body {
-    background-color: #0b0f19;
-    color: #f1f5f9;
+    background-color: #EEF0F2;
+    color: #1F2933;
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     user-select: none;
     overflow-x: hidden;
   }
 }
 
-/* Monospace font utility for industrial tags and numbers only */
+/* Monospace font utility for industrial tag names and numbers */
 .font-tag {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Custom industrial scrollbars */
+/* Technical Industrial Card style: clean white surface, 1px subtle border, 8px radius */
+.hmi-card {
+  background-color: #FFFFFF;
+  border: 1px solid #D5DBE1;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.hmi-card-subtle {
+  background-color: #F5F6F8;
+  border: 1px solid #D5DBE1;
+  border-radius: 8px;
+}
+
+/* Sliders: track #D5DBE1, filled part graphite #3B4651, thumb white with a graphite border. No colored glow. */
+input[type=range] {
+  accent-color: #3B4651;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #D5DBE1;
+  border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #3B4651;
+  cursor: pointer;
+  margin-top: -6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+
+input[type=range]::-moz-range-track {
+  height: 6px;
+  background: #D5DBE1;
+  border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #3B4651;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+
+/* Custom technical scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #E2E6EA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #CBD2D9;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #9AA5B1;
 }
 
-/* Industrial LED and Glow Effects */
-.led-glow-green {
-  box-shadow: 0 0 10px #10b981, 0 0 20px #10b98144;
-}
-.led-glow-red {
-  box-shadow: 0 0 10px #ef4444, 0 0 20px #ef444444;
-}
-.led-glow-amber {
-  box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b44;
-}
-.led-glow-blue {
-  box-shadow: 0 0 10px #0ea5e9, 0 0 20px #0ea5e944;
-}
-
-/* Conveyor belt animated pattern */
-@keyframes conveyor-move {
+/* Conveyor belt technical movement animation */
+@keyframes conveyor-technical-move {
   0% {
     background-position: 0 0;
   }
   100% {
-    background-position: 40px 0;
+    background-position: 32px 0;
   }
 }
 
 .conveyor-belt-stripes {
+  background-color: #9AA5B1;
   background-image: repeating-linear-gradient(
     90deg,
-    #1e293b,
-    #1e293b 16px,
-    #0f172a 16px,
-    #0f172a 20px
+    #9AA5B1,
+    #9AA5B1 14px,
+    #7B8794 14px,
+    #7B8794 16px
   );
 }
 
 .conveyor-belt-animated {
-  animation: conveyor-move 0.6s linear infinite;
+  animation: conveyor-technical-move 0.6s linear infinite;
 }
 
-/* Flashing Alarm Box */
-@keyframes alarm-pulse {
+/* Technical Alarm Row Pulse (Subtle flat color oscillation, NO glow) */
+@keyframes technical-alarm-pulse {
   0%, 100% {
-    opacity: 1;
-    transform: scale(1);
+    background-color: #FFEBEE;
   }
   50% {
-    opacity: 0.5;
-    transform: scale(0.995);
+    background-color: #FFCDD2;
   }
 }
 
-.alarm-flash {
-  animation: alarm-pulse 0.8s ease-in-out infinite;
-}
-
-/* Tech grid background */
-.tech-grid {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+.alarm-row-active {
+  animation: technical-alarm-pulse 1.2s ease-in-out infinite;
 }

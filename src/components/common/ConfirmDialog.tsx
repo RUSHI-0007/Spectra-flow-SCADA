@@ -1,5 +1,6 @@
 // ============================================================================
-// Confirmation Dialog Modal for Destructive SCADA Operations
+// Confirmation Dialog Modal (Light Industrial Theme)
+// Responsive: Full-width bottom sheet on phone (<sm), centered card on sm+
 // ============================================================================
 
 import React from 'react';
@@ -12,6 +13,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   isDestructive?: boolean;
+  isDangerous?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -23,48 +25,60 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmLabel = 'Confirm Action',
   cancelLabel = 'Cancel',
   isDestructive = true,
+  isDangerous,
   onConfirm,
   onCancel,
 }) => {
   if (!isOpen) return null;
 
+  const isWarningAction = isDangerous !== undefined ? isDangerous : isDestructive;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs">
-      <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
+      <div 
+        className="fixed inset-0"
+        onClick={onCancel}
+      />
+      <div className="relative z-10 bg-white border border-[#CBD2D9] rounded-t-xl sm:rounded-lg max-w-md w-full p-5 shadow-lg space-y-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-              isDestructive ? 'bg-red-950/80 text-red-400 border border-red-800/80' : 'bg-blue-950/80 text-blue-400 border border-blue-800/80'
+            <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+              isWarningAction 
+                ? 'bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]' 
+                : 'bg-[#F5F6F8] text-[#3B4651] border border-[#CBD2D9]'
             }`}>
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">{title}</h3>
-              <p className="text-xs text-slate-400">Confirmation required</p>
+              <h3 className="text-sm font-bold text-[#1F2933]">{title}</h3>
+              <p className="text-xs text-[#52606D]">Supervisory Action Confirmation</p>
             </div>
           </div>
-          <button onClick={onCancel} className="text-slate-400 hover:text-white p-1 rounded transition-colors">
-            <X className="w-4 h-4" />
+          <button 
+            onClick={onCancel} 
+            className="text-[#52606D] hover:text-[#1F2933] p-1.5 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-3.5 rounded-lg border border-slate-800">
+        <p className="text-xs text-[#52606D] leading-relaxed bg-[#F5F6F8] p-3 rounded-lg border border-[#D5DBE1]">
           {message}
         </p>
 
         <div className="flex justify-end gap-2.5 pt-2">
           <button
             onClick={onCancel}
-            className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-[#F5F6F8] hover:bg-[#ECEFF2] border border-[#D5DBE1] text-[#1F2933] text-xs font-semibold transition-colors cursor-pointer min-h-[44px]"
           >
             {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
-            className={`px-4 py-2 rounded-lg text-xs font-medium transition-all shadow cursor-pointer ${
-              isDestructive
-                ? 'bg-red-600 hover:bg-red-500 text-white'
-                : 'bg-blue-600 hover:bg-blue-500 text-white'
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[44px] text-white ${
+              isWarningAction
+                ? 'bg-[#C62828] hover:bg-[#B71C1C]'
+                : 'bg-[#3B4651] hover:bg-[#2D363F]'
             }`}
           >
             {confirmLabel}

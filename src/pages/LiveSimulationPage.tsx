@@ -1,7 +1,7 @@
 // ============================================================================
 // Page 2: Live Conveyor Simulation (Hero Exhibition Page)
-// Clean, calm, modern "control room" look that guests and non-technical people
-// can understand at a glance. Full width, large readable bins, sticky controls.
+// Light Industrial HMI Theme
+// Palette tokens: graphite #3B4651, olive #6B7A5A, amber #B7791F
 // ============================================================================
 
 import React from 'react';
@@ -15,51 +15,51 @@ import { HelpTooltip } from '../components/common/HelpTooltip';
 
 export const LiveSimulationPage: React.FC = () => {
   const { state } = useScada();
-  const { counters, motor } = state;
+  const { counters } = state;
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-150 w-full">
+    <div className="space-y-3 sm:space-y-4 w-full">
       
       {/* Page Title & Fast Stats Strip */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-[#D5DBE1]">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-500" />
+          <h1 className="text-lg sm:text-xl font-bold text-[#1F2933] flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#3B4651]" />
             Live Conveyor &amp; Bottle Sorting Cell
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-[#52606D] mt-0.5">
             Real-time automated bottle detection, pneumatic diverter sorting, and drive diagnostics
           </p>
         </div>
 
         {/* Quick Readout Badges */}
-        <div className="flex flex-wrap items-center gap-2.5 text-xs">
-          <div className="bg-slate-900 px-3.5 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2 shadow-sm">
-            <Layers className="w-4 h-4 text-blue-400" />
-            <span className="text-slate-400">Total fed:</span>
-            <span className="text-white font-bold font-tag text-sm">{counters.totalInfeed}</span>
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <div className="bg-white px-3 py-1.5 rounded-lg border border-[#D5DBE1] flex items-center gap-2 shadow-xs">
+            <Layers className="w-4 h-4 text-[#3B4651]" />
+            <span className="text-[#52606D]">Total fed:</span>
+            <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.totalInfeed}</span>
             <HelpTooltip 
               term="Total Bottles Fed" 
               explanation="Total number of bottles introduced onto the conveyor infeed since line start." 
             />
           </div>
 
-          <div className="bg-slate-900 px-3.5 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2 shadow-sm">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-slate-400">Bin A (500ml):</span>
-            <span className="text-emerald-300 font-bold font-tag text-sm">{counters.categoryA}</span>
+          <div className="bg-[#F2F5F0] px-3 py-1.5 rounded-lg border border-[#CCD5C5] flex items-center gap-2 shadow-xs">
+            <CheckCircle2 className="w-4 h-4 text-[#6B7A5A]" />
+            <span className="text-[#52606D]">Bin A (500ml):</span>
+            <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.categoryA}</span>
           </div>
 
-          <div className="bg-slate-900 px-3.5 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2 shadow-sm">
-            <Archive className="w-4 h-4 text-amber-400" />
-            <span className="text-slate-400">Bin B (1000ml):</span>
-            <span className="text-amber-300 font-bold font-tag text-sm">{counters.categoryB}</span>
+          <div className="bg-[#FDF6E9] px-3 py-1.5 rounded-lg border border-[#E8D4B4] flex items-center gap-2 shadow-xs">
+            <Archive className="w-4 h-4 text-[#B7791F]" />
+            <span className="text-[#52606D]">Bin B (1000ml):</span>
+            <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.categoryB}</span>
           </div>
 
-          <div className="bg-slate-900 px-3.5 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2 shadow-sm">
-            <Gauge className="w-4 h-4 text-blue-400" />
-            <span className="text-slate-400">Rate:</span>
-            <span className="text-white font-bold font-tag text-sm">{counters.currentBpm} BPM</span>
+          <div className="bg-white px-3 py-1.5 rounded-lg border border-[#D5DBE1] flex items-center gap-2 shadow-xs">
+            <Gauge className="w-4 h-4 text-[#3B4651]" />
+            <span className="text-[#52606D]">Rate:</span>
+            <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.currentBpm} BPM</span>
             <HelpTooltip 
               term="Throughput Rate (BPM)" 
               explanation="Bottles Per Minute: production rate calculated from current belt velocity." 
@@ -77,7 +77,7 @@ export const LiveSimulationPage: React.FC = () => {
       {/* 3. Operator Control Console & Fault Injection Panel */}
       <ManualControls />
 
-      {/* 4. Sticky Bottom Control Bar (Always visible at 1366x768 and 1920x1080 without scrolling) */}
+      {/* 4. Sticky Bottom Control Bar */}
       <StickyControlBar />
 
     </div>

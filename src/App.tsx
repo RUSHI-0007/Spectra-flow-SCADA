@@ -1,6 +1,6 @@
 // ============================================================================
-// Spectra-Flow SCADA Main Application Shell
-// Industrial Automation HMI & Conveyor Sorting Simulator
+// Spectra-Flow SCADA Main Application Shell (Light Industrial HMI Theme)
+// Responsive across Phone (<md), Tablet (md), and Desktop (lg+)
 // ============================================================================
 
 import React, { useEffect } from 'react';
@@ -8,6 +8,7 @@ import { ScadaProvider, useScada } from './context/ScadaContext';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { TopStatusBar } from './components/layout/TopStatusBar';
 import { Sidebar } from './components/layout/Sidebar';
+import { BottomTabBar } from './components/layout/BottomTabBar';
 import { ToastBanner } from './components/layout/ToastBanner';
 import { PresenterPanel } from './components/layout/PresenterPanel';
 import { GuidedTourBanner } from './components/exhibition/GuidedTourBanner';
@@ -29,7 +30,6 @@ const ScadaAppContent: React.FC = () => {
   // Global Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Do not intercept if user is typing in an input field
       const activeTag = document.activeElement?.tagName.toLowerCase();
       if (activeTag === 'input' || activeTag === 'textarea') {
         return;
@@ -99,7 +99,7 @@ const ScadaAppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans select-none overflow-x-hidden">
+    <div className="min-h-screen bg-[#EEF0F2] text-[#1F2933] flex flex-col font-sans select-none overflow-x-hidden">
       
       {/* 1. Control Room Top Status Bar */}
       <TopStatusBar />
@@ -107,12 +107,13 @@ const ScadaAppContent: React.FC = () => {
       {/* 2. Main Body with Navigation & Viewport */}
       <div className="flex-1 flex overflow-hidden">
         
-        {/* Sidebar Navigation (collapsible in Kiosk mode) */}
+        {/* Left Sidebar Navigation (Desktop & Tablet) */}
         {!isKioskMode && <Sidebar />}
 
-        {/* Scrollable Page Content Area - Full Width */}
-        <main className="flex-1 p-3 md:p-5 overflow-y-auto max-h-[calc(100vh-50px)]">
-          <div className="w-full pb-28">
+        {/* Scrollable Page Content Area - Fluid responsive padding */}
+        <main className="flex-1 px-3 sm:px-4 md:px-6 py-3 sm:py-4 overflow-y-auto max-h-[calc(100vh-50px)]">
+          {/* Bottom padding accounts for mobile tab bar & sticky control bar */}
+          <div className="w-full pb-36 md:pb-28">
             {renderCurrentPage()}
           </div>
         </main>
@@ -122,10 +123,13 @@ const ScadaAppContent: React.FC = () => {
 
       </div>
 
-      {/* 4. Guided Tour Floating Interactive Banner */}
+      {/* 4. Fixed Bottom Tab Bar for Mobile Phone (<md) */}
+      {!isKioskMode && <BottomTabBar />}
+
+      {/* 5. Guided Tour Floating Interactive Banner */}
       <GuidedTourBanner />
 
-      {/* 5. Feedback Toast for Blocked Operations / Alarms */}
+      {/* 6. Feedback Toast */}
       <ToastBanner
         toast={activeToast}
         onDismiss={() => dispatch({ type: 'CLEAR_TOAST' })}

@@ -13,17 +13,17 @@ export const PlcStatusStrip: React.FC = () => {
   const isFaultActive = state.machineState === 'FAULT' || Object.values(state.activeFaults).some(Boolean);
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800/80 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-md">
-      <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-        <span>PLC Input / Output Bus Status</span>
+    <div className="bg-white border border-[#D5DBE1] rounded-lg p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2.5 shadow-xs">
+      <div className="flex items-center gap-2 text-xs font-bold text-[#1F2933]">
+        <span className="w-2 h-2 rounded-full bg-[#3B4651]"></span>
+        <span>PLC Discrete I/O Bus Status</span>
         <HelpTooltip 
           term="PLC Bus Signals" 
           explanation="Real-time discrete I/O channels mapped to conveyor motor relays, photo sensors, and pneumatic solenoids." 
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2.5">
+      <div className="flex flex-wrap items-center gap-2">
         <StatusLamp
           label="Motor Drive"
           tag="%QX0.0"
@@ -34,7 +34,7 @@ export const PlcStatusStrip: React.FC = () => {
           label="Optical Sensor"
           tag="%IX0.1"
           active={isSensorActive}
-          color="blue"
+          color="amber"
         />
         <StatusLamp
           label="Diverter Arm"
