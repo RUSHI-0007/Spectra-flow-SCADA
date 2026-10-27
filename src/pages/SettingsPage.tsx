@@ -129,13 +129,30 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="range"
                 min="0"
-                max="25"
+                max="20"
                 step="1"
                 value={formSettings.defectProbabilityPercent}
                 onChange={e => setFormSettings({ ...formSettings, defectProbabilityPercent: parseInt(e.target.value) })}
                 className="w-full cursor-pointer h-2 bg-[#D5DBE1] rounded min-h-[32px]"
               />
-              <span className="text-[11px] text-[#52606D] block">Frequency of flawed fills, missing caps, or deformities.</span>
+              <span className="text-[11px] text-[#52606D] block">Configurable defect rate (0-20%, default 5%) routed to reject bin.</span>
+            </div>
+
+            {/* Batch Target (0 = Off) */}
+            <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-[#D5DBE1]">
+              <label className="text-[#1F2933] font-medium block">
+                Batch Production Target: <span className="text-[#3B4651] font-tag font-bold">{formSettings.batchTarget === 0 ? '0 (Off - Continuous Run)' : `${formSettings.batchTarget} bottles`}</span>
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="200"
+                step="5"
+                value={formSettings.batchTarget}
+                onChange={e => setFormSettings({ ...formSettings, batchTarget: parseInt(e.target.value) })}
+                className="w-full cursor-pointer h-2 bg-[#D5DBE1] rounded min-h-[32px]"
+              />
+              <span className="text-[11px] text-[#52606D] block">Conveyor performs a normal stop and logs "Batch complete" when packed count reaches this target (0 = off).</span>
             </div>
 
           </div>

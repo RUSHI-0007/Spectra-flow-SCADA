@@ -163,7 +163,8 @@ export interface SimSettings {
   nominalSpeedMs: number;      // 0.2 to 2.0 m/s (default 1.0)
   bottleSpawnIntervalSec: number; // 0.8 to 4.0 s (default 1.8)
   categoryARatioPercent: number;  // 10 to 90 % (default 50)
-  defectProbabilityPercent: number; // 0 to 30 % (default 5)
+  defectProbabilityPercent: number; // 0 to 20 % (default 5)
+  batchTarget: number;         // 0 = continuous run (off), > 0 = target count
   motorOverloadThresholdC: number; // default 80°C
   jamTimeoutSec: number;       // default 3.0s
   stopMode: StopMode;          // 'DRAIN' | 'PAUSE'

@@ -57,6 +57,16 @@ export const LiveSimulationPage: React.FC = () => {
           </div>
 
           <div className="bg-white px-3 py-1.5 rounded-lg border border-[#D5DBE1] flex items-center gap-2 shadow-xs">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#C62828]" />
+            <span className="text-[#52606D]">Reject:</span>
+            <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.rejectedCount}</span>
+            <HelpTooltip 
+              term="Defective Rejects" 
+              explanation="Bottles rejected due to underfilling, missing cap, or dimensional deformation." 
+            />
+          </div>
+
+          <div className="bg-white px-3 py-1.5 rounded-lg border border-[#D5DBE1] flex items-center gap-2 shadow-xs">
             <Gauge className="w-4 h-4 text-[#3B4651]" />
             <span className="text-[#52606D]">Rate:</span>
             <span className="text-[#1F2933] font-bold font-tag text-sm">{counters.currentBpm} BPM</span>
@@ -67,6 +77,38 @@ export const LiveSimulationPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Batch Target Progress Bar (visible when batchTarget > 0) */}
+      {state.settings.batchTarget > 0 && (
+        <div className="bg-white border border-[#D5DBE1] rounded-lg p-3 sm:p-3.5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#3B4651]" />
+            <div>
+              <div className="text-xs font-bold text-[#1F2933] flex items-center gap-2">
+                <span>Batch Target Progress</span>
+                <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[#F5F6F8] border border-[#D5DBE1] text-[#52606D]">
+                  {counters.categoryA + counters.categoryB >= state.settings.batchTarget ? 'Target Reached' : 'In Progress'}
+                </span>
+              </div>
+              <div className="text-[11px] text-[#52606D]">
+                Packed {counters.categoryA + counters.categoryB} of {state.settings.batchTarget} target bottles ({Math.min(100, Math.round(((counters.categoryA + counters.categoryB) / state.settings.batchTarget) * 100))}%)
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full sm:w-64 flex items-center gap-2">
+            <div className="flex-1 bg-[#D5DBE1] h-2 rounded-full overflow-hidden">
+              <div 
+                className="bg-[#3B4651] h-full transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.round(((counters.categoryA + counters.categoryB) / state.settings.batchTarget) * 100))}%` }}
+              />
+            </div>
+            <span className="text-xs font-tag font-bold text-[#1F2933] w-12 text-right">
+              {Math.min(100, Math.round(((counters.categoryA + counters.categoryB) / state.settings.batchTarget) * 100))}%
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* 1. PLC Hardware Status Strip */}
       <PlcStatusStrip />

@@ -267,12 +267,12 @@ export const ManualControls: React.FC = () => {
                 className="w-full p-2.5 rounded-lg border bg-white border-[#D5DBE1] hover:border-[#9AA5B1] text-xs font-medium flex items-center justify-between transition-colors cursor-pointer min-h-[44px]"
               >
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className={`w-4 h-4 ${activeFaults.jam ? 'text-[#C62828]' : 'text-[#6B7785]'}`} />
+                  <AlertTriangle className={`w-4 h-4 ${activeFaults.jam ? 'text-[#D98200]' : 'text-[#6B7785]'}`} />
                   <span className="text-[#1F2933]">Conveyor Jam (ALM-101)</span>
                 </div>
                 <span className={`text-[10px] px-2 py-0.5 rounded font-tag font-bold ${
                   activeFaults.jam 
-                    ? 'bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]' 
+                    ? 'bg-[#FFF8E1] text-[#D98200] border border-[#FFE082]' 
                     : 'bg-[#E2E6EA] text-[#6B7785]'
                 }`}>
                   {activeFaults.jam ? 'ON' : 'OFF'}
@@ -285,12 +285,12 @@ export const ManualControls: React.FC = () => {
                 className="w-full p-2.5 rounded-lg border bg-white border-[#D5DBE1] hover:border-[#9AA5B1] text-xs font-medium flex items-center justify-between transition-colors cursor-pointer min-h-[44px]"
               >
                 <div className="flex items-center gap-2">
-                  <Flame className={`w-4 h-4 ${activeFaults.motorOverload ? 'text-[#C62828]' : 'text-[#6B7785]'}`} />
+                  <Flame className={`w-4 h-4 ${activeFaults.motorOverload ? 'text-[#D98200]' : 'text-[#6B7785]'}`} />
                   <span className="text-[#1F2933]">Motor Overload (ALM-102)</span>
                 </div>
                 <span className={`text-[10px] px-2 py-0.5 rounded font-tag font-bold ${
                   activeFaults.motorOverload 
-                    ? 'bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]' 
+                    ? 'bg-[#FFF8E1] text-[#D98200] border border-[#FFE082]' 
                     : 'bg-[#E2E6EA] text-[#6B7785]'
                 }`}>
                   {activeFaults.motorOverload ? 'ON' : 'OFF'}

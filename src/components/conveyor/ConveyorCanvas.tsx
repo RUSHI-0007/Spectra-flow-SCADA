@@ -65,7 +65,7 @@ export const ConveyorCanvas: React.FC = () => {
             <span className="font-medium sm:hidden">1. In</span>
           </div>
 
-          <div className="flex items-center gap-1 ml-[15%] sm:ml-[18%]">
+          <div className="flex items-center gap-1 ml-[8%] sm:ml-[12%]">
             <span className={`w-2 h-2 rounded-full ${sensor.active ? 'bg-[#C62828]' : 'bg-[#6B7785]'}`}></span>
             <span className="font-medium hidden sm:inline">2. Optical Sensor</span>
             <span className="font-medium sm:hidden">2. S-01</span>
@@ -75,10 +75,20 @@ export const ConveyorCanvas: React.FC = () => {
             />
           </div>
 
-          <div className="flex items-center gap-1 ml-[12%] sm:ml-[16%]">
+          <div className="flex items-center gap-1 ml-[5%] sm:ml-[8%]">
+            <span className="w-2 h-2 rounded-full bg-[#C62828]"></span>
+            <span className="font-medium hidden sm:inline">3. Reject Gate</span>
+            <span className="font-medium sm:hidden">3. Rej</span>
+            <HelpTooltip 
+              term="Reject Ejector (%QX0.2)" 
+              explanation="Discharges defective (out-of-spec) bottles into the reject bin." 
+            />
+          </div>
+
+          <div className="flex items-center gap-1 ml-[5%] sm:ml-[8%]">
             <span className={`w-2 h-2 rounded-full ${diverter.actuated ? 'bg-[#B7791F]' : 'bg-[#6B7785]'}`}></span>
-            <span className="font-medium hidden sm:inline">3. Diverter Arm</span>
-            <span className="font-medium sm:hidden">3. Arm</span>
+            <span className="font-medium hidden sm:inline">4. Diverter Arm</span>
+            <span className="font-medium sm:hidden">4. Arm</span>
             <HelpTooltip 
               term="Pneumatic Pusher (%QX0.1)" 
               explanation="Actuates to guide Category B (1000ml Amber) bottles down into Bin B." 
@@ -87,8 +97,8 @@ export const ConveyorCanvas: React.FC = () => {
 
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-[#6B7A5A]"></span>
-            <span className="font-medium hidden sm:inline">4. Bin A Straight</span>
-            <span className="font-medium sm:hidden">4. Bin A</span>
+            <span className="font-medium hidden sm:inline">5. Bin A Straight</span>
+            <span className="font-medium sm:hidden">5. Bin A</span>
           </div>
         </div>
 
@@ -264,6 +274,19 @@ export const ConveyorCanvas: React.FC = () => {
           }`} />
         </div>
 
+        {/* 3. REJECT GATE / PNEUMATIC EJECTOR (at x = 50% mark) */}
+        <div className="absolute left-[49%] sm:left-[51%] top-[56px] sm:top-[69px] md:top-[81px] z-30 flex flex-col items-center">
+          <div className="text-[10px] font-bold text-[#52606D] mb-0.5 flex items-center gap-1 bg-white px-1 rounded border border-[#D5DBE1]">
+            <span>Reject</span>
+            <span className="font-tag text-[9px] text-[#52606D]">({counters.rejectedCount})</span>
+          </div>
+
+          <div className="relative w-6 sm:w-7 h-7 sm:h-9 bg-white border border-[#52606D] rounded-xs shadow-xs flex flex-col items-center justify-start p-1">
+            <span className="text-[7px] text-[#52606D] font-tag">%QX0.2</span>
+            <div className="w-1.5 h-3 bg-[#6B7785] rounded-b mt-auto" />
+          </div>
+        </div>
+
         {/* 4. DIVERTER SOLENOID ARM (at x = 65% mark) */}
         <div className="absolute left-[63%] sm:left-[65%] top-[55px] sm:top-[68px] md:top-[80px] z-30 flex flex-col items-center">
           <div className="text-[10px] font-bold text-[#B7791F] mb-0.5 flex items-center gap-1 bg-white px-1 rounded border border-[#D5DBE1]">
@@ -289,9 +312,36 @@ export const ConveyorCanvas: React.FC = () => {
         </div>
 
         {/* 5. DESTINATION BINS on Tablet/Desktop (md+) overlaid inside canvas */}
+
+        {/* REJECT BIN: DEFECTS (at x = 26%) */}
+        <div className="hidden md:flex absolute left-[25%] lg:left-[27%] bottom-2.5 w-36 lg:w-44 h-22 lg:h-24 bg-white border border-[#D5DBE1] rounded-lg p-2.5 flex-col justify-between z-20 shadow-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#C62828]" />
+              <span className="text-xs font-bold text-[#1F2933]">
+                Reject Bin
+              </span>
+            </div>
+            <span className="text-[10px] text-[#52606D] font-medium">Defects</span>
+          </div>
+
+          <div className="flex items-baseline justify-between my-0.5">
+            <span className="text-3xl lg:text-4xl font-extrabold text-[#1F2933] font-tag tracking-tight">
+              {counters.rejectedCount}
+            </span>
+            <span className="text-xs text-[#52606D] font-medium">scrapped</span>
+          </div>
+
+          <div className="w-full bg-[#D5DBE1] h-1.5 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#C62828] h-full transition-all duration-300" 
+              style={{ width: `${Math.min(100, (counters.rejectedCount % 50) * 2)}%` }} 
+            />
+          </div>
+        </div>
         
         {/* BIN B: CATEGORY B (Diverted at x = 65%) */}
-        <div className="hidden md:flex absolute left-[55%] bottom-2.5 w-44 lg:w-56 h-22 lg:h-24 bg-[#FDF6E9] border-2 border-[#B7791F] rounded-lg p-2.5 flex-col justify-between z-20 shadow-xs">
+        <div className="hidden md:flex absolute left-[49%] lg:left-[51%] bottom-2.5 w-40 lg:w-48 h-22 lg:h-24 bg-[#FDF6E9] border-2 border-[#B7791F] rounded-lg p-2.5 flex-col justify-between z-20 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#B7791F]" />
@@ -318,7 +368,7 @@ export const ConveyorCanvas: React.FC = () => {
         </div>
 
         {/* BIN A: CATEGORY A (Straight Discharge at x = 95%) - Olive-grey #6B7A5A */}
-        <div className="hidden md:flex absolute right-2.5 bottom-2.5 w-44 lg:w-56 h-22 lg:h-24 bg-[#F2F5F0] border-2 border-[#6B7A5A] rounded-lg p-2.5 flex-col justify-between z-20 shadow-xs">
+        <div className="hidden md:flex absolute right-2.5 bottom-2.5 w-40 lg:w-48 h-22 lg:h-24 bg-[#F2F5F0] border-2 border-[#6B7A5A] rounded-lg p-2.5 flex-col justify-between z-20 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#6B7A5A]" />
@@ -388,26 +438,41 @@ export const ConveyorCanvas: React.FC = () => {
       </div>
 
       {/* 5. MOBILE BINS SECTION (<md): Sits cleanly below the belt on phone */}
-      <div className="md:hidden grid grid-cols-2 gap-2.5 mt-3">
+      <div className="md:hidden grid grid-cols-3 gap-2 mt-3">
         
-        {/* Mobile BIN B Card */}
-        <div className="bg-[#FDF6E9] border-2 border-[#B7791F] rounded-lg p-2.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#B7791F]" />
-              <span className="text-xs font-bold text-[#B7791F]">Bin B (Diverted)</span>
-            </div>
+        {/* Mobile BIN A Card */}
+        <div className="bg-[#F2F5F0] border-2 border-[#6B7A5A] rounded-lg p-2 flex flex-col justify-between">
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#6B7A5A]" />
+            <span className="text-[11px] font-bold text-[#6B7A5A] truncate">Bin A</span>
           </div>
-          <span className="text-[10px] text-[#52606D]">1000ml Amber</span>
+          <span className="text-[9px] text-[#52606D]">500ml Clear</span>
+          <div className="flex items-baseline justify-between my-0.5">
+            <span className="text-xl font-extrabold text-[#1F2933] font-tag">
+              {counters.categoryA}
+            </span>
+          </div>
+          <div className="w-full bg-[#D5DBE1] h-1 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#6B7A5A] h-full" 
+              style={{ width: `${Math.min(100, (counters.categoryA % 50) * 2)}%` }} 
+            />
+          </div>
+        </div>
 
-          <div className="flex items-baseline justify-between my-1">
-            <span className="text-2xl font-extrabold text-[#1F2933] font-tag">
+        {/* Mobile BIN B Card */}
+        <div className="bg-[#FDF6E9] border-2 border-[#B7791F] rounded-lg p-2 flex flex-col justify-between">
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#B7791F]" />
+            <span className="text-[11px] font-bold text-[#B7791F] truncate">Bin B</span>
+          </div>
+          <span className="text-[9px] text-[#52606D]">1000ml Amber</span>
+          <div className="flex items-baseline justify-between my-0.5">
+            <span className="text-xl font-extrabold text-[#1F2933] font-tag">
               {counters.categoryB}
             </span>
-            <span className="text-[11px] text-[#52606D]">sorted</span>
           </div>
-
-          <div className="w-full bg-[#D5DBE1] h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-[#D5DBE1] h-1 rounded-full overflow-hidden">
             <div 
               className="bg-[#B7791F] h-full" 
               style={{ width: `${Math.min(100, (counters.categoryB % 50) * 2)}%` }} 
@@ -415,27 +480,22 @@ export const ConveyorCanvas: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile BIN A Card */}
-        <div className="bg-[#F2F5F0] border-2 border-[#6B7A5A] rounded-lg p-2.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#6B7A5A]" />
-              <span className="text-xs font-bold text-[#6B7A5A]">Bin A (Straight)</span>
-            </div>
+        {/* Mobile REJECT Card */}
+        <div className="bg-white border border-[#D5DBE1] rounded-lg p-2 flex flex-col justify-between">
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#C62828]" />
+            <span className="text-[11px] font-bold text-[#1F2933] truncate">Reject</span>
           </div>
-          <span className="text-[10px] text-[#52606D]">500ml Clear</span>
-
-          <div className="flex items-baseline justify-between my-1">
-            <span className="text-2xl font-extrabold text-[#1F2933] font-tag">
-              {counters.categoryA}
+          <span className="text-[9px] text-[#52606D]">Defects</span>
+          <div className="flex items-baseline justify-between my-0.5">
+            <span className="text-xl font-extrabold text-[#1F2933] font-tag">
+              {counters.rejectedCount}
             </span>
-            <span className="text-[11px] text-[#52606D]">packed</span>
           </div>
-
-          <div className="w-full bg-[#D5DBE1] h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-[#D5DBE1] h-1 rounded-full overflow-hidden">
             <div 
-              className="bg-[#6B7A5A] h-full" 
-              style={{ width: `${Math.min(100, (counters.categoryA % 50) * 2)}%` }} 
+              className="bg-[#C62828] h-full" 
+              style={{ width: `${Math.min(100, (counters.rejectedCount % 50) * 2)}%` }} 
             />
           </div>
         </div>

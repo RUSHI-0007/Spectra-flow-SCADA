@@ -54,7 +54,8 @@ export const DEFAULT_SETTINGS: SimSettings = {
   nominalSpeedMs: 1.0,
   bottleSpawnIntervalSec: 1.8,
   categoryARatioPercent: 50,
-  defectProbabilityPercent: 6,
+  defectProbabilityPercent: 5,
+  batchTarget: 0,
   motorOverloadThresholdC: 80.0,
   jamTimeoutSec: 3.0,
   stopMode: 'DRAIN',
@@ -846,6 +847,42 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
           operator: 'AUTO_PLC',
         });
       }
+      if (rejectIncrement > 0) {
+        tickEvents.push({
+          id: `evt-${nowTs}-sortrej`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'SORTING',
+          description: `Bottle rejected into Reject Bin (Out-of-Spec Defect) - count: ${nextCounters.rejectedCount}`,
+          source: 'REJECT_STATION',
+          operator: 'AUTO_PLC',
+        });
+      }
+
+      // Check Batch Target Completion
+      let batchToast = null;
+      if (
+        state.settings.batchTarget > 0 &&
+        (nextMachineState === 'RUNNING' || nextMachineState === 'STARTING') &&
+        (nextCounters.categoryA + nextCounters.categoryB) >= state.settings.batchTarget
+      ) {
+        nextMachineState = 'STOPPING';
+        industrialAudio.stopMotorSound();
+        tickEvents.push({
+          id: `evt-${nowTs}-batch`,
+          timestamp: nowTs,
+          timeStr: nowStr,
+          type: 'SYSTEM',
+          description: `Batch complete: Target of ${state.settings.batchTarget} packed bottles reached (${nextCounters.categoryA} Bin A, ${nextCounters.categoryB} Bin B). Normal stop initiated.`,
+          source: 'BATCH_CONTROLLER',
+          operator: 'AUTO_PLC',
+        });
+        batchToast = {
+          message: `Batch complete: ${state.settings.batchTarget} bottles packed successfully. Conveyor stopped.`,
+          type: 'info' as const,
+          id: nowTs,
+        };
+      }
 
       // Detection event (throttled: only on new rising edge beam break)
       if (sensorActive && !state.sensor.active) {
@@ -875,6 +912,7 @@ function scadaReducer(state: ScadaState, action: Action): ScadaState {
         alarms: nextAlarms,
         counters: nextCounters,
         events: nextEvents,
+        activeToast: batchToast ?? state.activeToast,
       };
     }
 

@@ -4,7 +4,7 @@
 // Notice: Simulator state presentation only, labeled as SIMULATED.
 // ============================================================================
 
-import { ScadaTag, MachineState, MotorTelemetry, SensorStatus, DiverterStatus, ProductionCounters, ActiveFaults } from '../types/scada';
+import { ScadaTag, MachineState, MotorTelemetry, SensorStatus, DiverterStatus, ProductionCounters, ActiveFaults, SimSettings } from '../types/scada';
 
 export class TagDatabase {
   public static generateTags(
@@ -13,7 +13,8 @@ export class TagDatabase {
     sensor: SensorStatus,
     diverter: DiverterStatus,
     counters: ProductionCounters,
-    faults: ActiveFaults
+    faults: ActiveFaults,
+    settings?: SimSettings
   ): ScadaTag[] {
     const now = Date.now();
 
@@ -200,6 +201,38 @@ export class TagDatabase {
         value: counters.utilizationPercent,
         unit: '%',
         description: 'Machine Overall Utilization efficiency percentage',
+        lastUpdated: now,
+      },
+      {
+        name: 'REJECT_COUNT',
+        address: '%MW148',
+        type: 'INT',
+        direction: 'INTERNAL',
+        value: counters.rejectedCount,
+        unit: 'units',
+        description: 'Defective bottle quality reject accumulator',
+        lastUpdated: now,
+      },
+      {
+        name: 'BATCH_TARGET',
+        address: '%MW150',
+        type: 'INT',
+        direction: 'INTERNAL',
+        value: settings?.batchTarget ?? 0,
+        unit: 'units',
+        description: 'Batch production quantity setpoint (0 = continuous run)',
+        lastUpdated: now,
+      },
+      {
+        name: 'BATCH_PROGRESS',
+        address: '%MD152',
+        type: 'REAL',
+        direction: 'INTERNAL',
+        value: settings && settings.batchTarget > 0 
+          ? Math.min(100, Math.round(((counters.categoryA + counters.categoryB) / settings.batchTarget) * 100))
+          : 0,
+        unit: '%',
+        description: 'Real-time batch fulfillment progress percentage',
         lastUpdated: now,
       },
     ];

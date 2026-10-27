@@ -219,6 +219,34 @@ export const AlarmsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* How Alarms Work: Industrial Interlock Principles */}
+      <div className="bg-white border border-[#D5DBE1] rounded-lg p-3.5 sm:p-4 shadow-xs">
+        <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-[#D5DBE1]">
+          <span className="w-2 h-2 rounded-full bg-[#3B4651]" />
+          <h3 className="text-xs font-semibold text-[#1F2933]">
+            How alarms work
+          </h3>
+        </div>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-[#52606D]">
+          <li className="flex items-start gap-2">
+            <span className="text-[#3B4651] font-bold shrink-0">•</span>
+            <span>Silence/Acknowledge stops the buzzer but does not fix the fault.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#3B4651] font-bold shrink-0">•</span>
+            <span>Reset only works after the cause is removed.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#3B4651] font-bold shrink-0">•</span>
+            <span>Reset never restarts the conveyor; the operator must press Start.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#3B4651] font-bold shrink-0">•</span>
+            <span>Emergency Stop must be released and reset before restarting.</span>
+          </li>
+        </ul>
+      </div>
+
       {/* Filter Tabs - scrollable chips on mobile */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-1 text-xs overflow-x-auto pb-1 max-w-full">

@@ -28,7 +28,8 @@ export const TagTablePage: React.FC = () => {
     sensor,
     diverter,
     counters,
-    activeFaults
+    activeFaults,
+    state.settings
   );
 
   const filteredTags = tags.filter(tag => {

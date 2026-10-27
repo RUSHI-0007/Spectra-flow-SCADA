@@ -129,6 +129,14 @@ export class BottleManager {
         }
       }
 
+      // Check Defect Reject Station (x >= 500, between inspection sensor and diverter)
+      if (newPos >= 500 && !bottle.sorted && bottle.defect !== 'NONE') {
+        bottle.sorted = true;
+        bottle.sortedTo = 'REJECT';
+        onBottleSorted('REJECT', bottle);
+        continue; // Diverted into reject bin
+      }
+
       // Check Diverter Sorting Zone (x >= 640)
       if (newPos >= 640 && !bottle.diverted && !bottle.sorted) {
         if (opMode === 'AUTO') {

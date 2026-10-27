@@ -54,11 +54,11 @@ export const AnalyticsPage: React.FC = () => {
 
   const filteredHistory = getFilteredHistory();
 
-  // Category A vs B Data for Bar Chart: Olive-grey #6B7A5A and Amber #B7791F
+  // Category A vs B Data for Bar Chart: Olive-grey #6B7A5A, Amber #B7791F, and Reject #C62828
   const categoryData = [
     { name: 'Bin A (500ml Clear)', count: counters.categoryA, fill: '#6B7A5A' },
     { name: 'Bin B (1000ml Amber)', count: counters.categoryB, fill: '#B7791F' },
-    { name: 'Defect / Scrapped', count: counters.rejectedCount, fill: '#C62828' },
+    { name: 'Rejected (Defect)', count: counters.rejectedCount, fill: '#C62828' },
   ];
 
   // Fault Frequency by type
@@ -81,8 +81,10 @@ export const AnalyticsPage: React.FC = () => {
     count,
   }));
 
-  const totalSorted = counters.categoryA + counters.categoryB;
-  const scrapRate = totalSorted > 0 ? ((counters.rejectedCount / totalSorted) * 100).toFixed(1) : '0.0';
+  const totalFinished = counters.categoryA + counters.categoryB + counters.rejectedCount;
+  const goodSorted = counters.categoryA + counters.categoryB;
+  const scrapRate = totalFinished > 0 ? ((counters.rejectedCount / totalFinished) * 100).toFixed(1) : '0.0';
+  const yieldRate = totalFinished > 0 ? ((goodSorted / totalFinished) * 100).toFixed(1) : '100.0';
 
   return (
     <div className="space-y-4 md:space-y-5 animate-in fade-in duration-150 w-full">
@@ -144,9 +146,9 @@ export const AnalyticsPage: React.FC = () => {
             <HelpTooltip term="Yield Rate" explanation="Percentage of sorted bottles that were defect-free." />
           </div>
           <div className="text-2xl md:text-3xl font-bold font-tag text-[#1F2933] my-1">
-            {totalSorted > 0 ? (100 - parseFloat(scrapRate)).toFixed(1) : '100.0'}%
+            {yieldRate}%
           </div>
-          <div className="text-[11px] text-[#52606D]">Good: {totalSorted} • Defect: {counters.rejectedCount}</div>
+          <div className="text-[11px] text-[#52606D]">Good: {goodSorted} • Defect: {counters.rejectedCount}</div>
         </div>
 
         <div className="bg-white border border-[#D5DBE1] rounded-lg p-3.5 shadow-xs">
@@ -220,7 +222,7 @@ export const AnalyticsPage: React.FC = () => {
               </h3>
               <HelpTooltip term="Category Distribution" explanation="Breakdown of sorted bottles between Bin A (Clear 500ml), Bin B (Amber 1000ml), and scrap defects." />
             </div>
-            <span className="text-xs text-[#52606D] font-tag">Total: {totalSorted} items</span>
+            <span className="text-xs text-[#52606D] font-tag">Total: {totalFinished} items</span>
           </div>
 
           <div className="w-full h-52 sm:h-56 bg-[#F5F6F8] rounded-lg p-2 border border-[#E4E7EB]">
