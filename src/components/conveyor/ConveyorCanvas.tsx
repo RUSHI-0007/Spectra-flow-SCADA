@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useScada } from '../../context/ScadaContext';
 import { HelpTooltip } from '../common/HelpTooltip';
+import { BottleGraphic } from './BottleGraphic';
 
 export const ConveyorCanvas: React.FC = () => {
   const { state, dispatch } = useScada();
@@ -163,14 +164,10 @@ export const ConveyorCanvas: React.FC = () => {
             ))}
           </div>
 
-          {/* BOTTLES TRAVELING ON CONVEYOR: Clean Technical White Bottles */}
+          {/* BOTTLES TRAVELING ON CONVEYOR: Realistic Industrial Glass Bottles */}
           {bottles.map(bottle => {
             const leftPct = (bottle.position / 1000) * 100;
-            const isCatA = bottle.category === 'CATEGORY_A';
-            const isDefect = bottle.defect !== 'NONE';
-
-            // Top offset on the belt
-            const topOffset = bottle.diverted ? 65 : 4;
+            const topOffset = bottle.diverted ? '82%' : '50%';
 
             return (
               <div
@@ -178,68 +175,12 @@ export const ConveyorCanvas: React.FC = () => {
                 className="absolute transition-all duration-100 z-20 pointer-events-none"
                 style={{
                   left: `${leftPct}%`,
-                  top: `${topOffset}px`,
+                  top: topOffset,
                   opacity: 1,
-                  transform: 'translateX(-50%)',
+                  transform: 'translate(-50%, -50%)',
                 }}
               >
-                <div className="relative flex flex-col items-center">
-                  {/* Bottle Cap */}
-                  <div
-                    className={`w-3 sm:w-3.5 h-1.5 sm:h-2 rounded-t-xs shadow-xs ${
-                      !bottle.hasCap
-                        ? 'border border-[#C62828] bg-transparent'
-                        : isCatA
-                        ? 'bg-[#6B7A5A] border border-[#536046]'
-                        : 'bg-[#B7791F] border border-[#975A16]'
-                    }`}
-                  />
-
-                  {/* Bottle Neck */}
-                  <div 
-                    className={`w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white border-x border-[#9AA5B1] ${
-                      bottle.defect === 'DEFORMED' ? 'rotate-12 translate-x-0.5' : ''
-                    }`}
-                  />
-
-                  {/* Bottle Body: White with subtle technical border */}
-                  <div
-                    className={`relative rounded-b-sm border shadow-xs flex flex-col justify-end overflow-hidden ${
-                      isCatA
-                        ? 'w-6 sm:w-7 h-10 sm:h-12 bg-white border-[#6B7A5A]'
-                        : 'w-6.5 sm:w-7.5 h-11 sm:h-13 bg-white border-[#B7791F]'
-                    }`}
-                  >
-                    {/* Liquid fill: Subtle neutral fill */}
-                    <div
-                      className={`w-full transition-all ${
-                        isCatA ? 'bg-[#F2F5F0] border-t border-[#6B7A5A]/40' : 'bg-[#FDF6E9] border-t border-[#B7791F]/40'
-                      }`}
-                      style={{ height: `${bottle.fillLevelPercent}%` }}
-                    />
-
-                    {/* Clear Technical Label */}
-                    <div 
-                      className={`absolute top-2 left-0.5 right-0.5 h-3.5 rounded-xs flex items-center justify-center text-[7px] font-bold text-white tracking-tight ${
-                        isCatA ? 'bg-[#6B7A5A]' : 'bg-[#B7791F]'
-                      }`}
-                    >
-                      {isCatA ? 'A 500ml' : 'B 1000ml'}
-                    </div>
-
-                    {/* Defect Indicator dot */}
-                    {isDefect && (
-                      <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-[#C62828]" />
-                    )}
-                  </div>
-
-                  {/* Jam alert text */}
-                  {bottle.isJammed && (
-                    <div className="absolute -top-4 bg-[#C62828] text-white text-[8px] font-bold px-1 rounded shadow-xs">
-                      JAMMED
-                    </div>
-                  )}
-                </div>
+                <BottleGraphic bottle={bottle} />
               </div>
             );
           })}
